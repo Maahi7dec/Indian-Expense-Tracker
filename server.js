@@ -27,11 +27,11 @@ app.use("/api/v1/users", require("./backend/routes/userroute")); // Corrected pa
 app.use("/api/v1/transactions", require("./backend/routes/transactionRoute")); // Corrected path
 
 // Serving static files
-app.use(express.static(path.join(__dirname, "./frontend/build")));
+app.use(express.static(path.join(__dirname, "./build")));
 
 // Handling all other routes
 app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "./frontend/build/index.html"));
+  res.sendFile(path.join(__dirname, "./build/index.html"));
 });
 
 // Port configuration
