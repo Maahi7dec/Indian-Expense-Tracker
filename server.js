@@ -2,11 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+const colors = require("colors");
 const path = require("path");
-const axios = require("axios");
+const connectDb = require("./backend/config/connectDB"); // Corrected path
 
 // Configuring dotenv
 dotenv.config();
+
+// Connecting to the database
+connectDb();
 
 // Creating express app
 const app = express();
@@ -16,39 +20,18 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
-// Proxy middleware
-app.use("/api", (req, res) => {
-  const apiUrl = `https://fair-pear-mite-cape.cyclic.app/api/v1/users/login`; // Replace with your API server URL
-  axios({
-    method: req.method,
-    url: apiUrl,
-    headers: {
-      ...req.headers,
-      // Add any additional headers needed for the API server
-    },
-    data: req.method !== 'GET' ? req.body : undefined,
-  })
-  .then(response => {
-    res.status(response.status).json(response.data);
-  })
-  .catch(error => {
-    console.error('Proxy error:', error);
-    res.status(500).json({ error: 'Proxy error' });
-  });
-});
-
 // Routes
 // User routes
-app.use("/api/v1/users", require("./backend/routes/userroute"));
+app.use("/api/v1/users", require("./backend/routes/userroute")); // Corrected path
 // Transaction routes
-app.use("/api/v1/transactions", require("./backend/routes/transactionRoute"));
+app.use("/api/v1/transactions", require("./backend/routes/transactionRoute")); // Corrected path
 
 // Serving static files
-app.use(express.static(path.join(__dirname, "./build")));
+app.use(express.static(path.join(__dirname, "./frontend/build")));
 
 // Handling all other routes
 app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "./build/index.html"));
+  res.sendFile(path.join(__dirname, "./frontend/build/index.html"));
 });
 
 // Port configuration
